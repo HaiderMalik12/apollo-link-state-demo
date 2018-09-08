@@ -1,16 +1,33 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import "./styles.css";
+import { ApolloClient } from "apollo-client";
+import { withClientState } from "apollo-link-state";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { ApolloProvider } from "react-apollo";
 
-function App() {
-  return (
-    <div className="App">
-      <h1>Hello CodeSandbox</h1>
-      <h2>Start editing to see some magic happen!</h2>
-    </div>
-  );
-}
+import "./styles.css";
+import App from "./components/App";
+import { resolvers, defaults } from "./resolvers";
+
+const cache = new InMemoryCache();
+
+const typeDefs = `
+ type Todo {
+   id: Int!
+   text: String!
+   completed: Boolean!
+ }
+`;
+const client = new ApolloClient({
+  cache,
+  link: withClientState({ resolvers, typeDefs, defaults, cache })
+});
 
 const rootElement = document.getElementById("root");
-ReactDOM.render(<App />, rootElement);
+ReactDOM.render(
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>,
+  rootElement
+);
