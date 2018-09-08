@@ -18,6 +18,12 @@ const typeDefs = `
    text: String!
    completed: Boolean!
  }
+ type Query {
+   todos: [Todo]
+ }
+ type Mutation {
+   addTodo : Todo
+ }
 `;
 const client = new ApolloClient({
   cache,
